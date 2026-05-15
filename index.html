@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AYOUB CINEMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@400;600;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --accent:#00ff00;
+  --accent2:#00cc00;
+  --accent-dim:rgba(0,255,0,0.15);
+  --bg:#080e0a;
+  --bg2:#0d1a10;
+  --glass:rgba(0,20,5,0.7);
+  --glass2:rgba(0,40,10,0.5);
+  --text:#e8f5e9;
+  --text-muted:rgba(232,245,233,0.55);
+  --border:rgba(0,255,0,0.13);
+  --border-hover:rgba(0,255,0,0.5);
+  --card-bg:rgba(5,20,8,0.85);
+  --poster-h:340px;
+}
+body[data-theme="light"]{
+  --bg:#f0f7f1;
+  --bg2:#e0efdf;
+  --glass:rgba(220,240,220,0.85);
+  --glass2:rgba(200,230,200,0.7);
+  --text:#0d2010;
+  --text-muted:rgba(13,32,16,0.6);
+  --border:rgba(0,180,0,0.2);
+  --border-hover:rgba(0,180,0,0.5);
+  --card-bg:rgba(230,245,230,0.92);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Cairo','Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background 0.4s,color 0.4s;
+}
+#particles-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;opacity:0.6;
+}
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 16px 40px}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  gap:12px;
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-img{width:42px;height:42px;border-radius:10px;object-fit:contain;
+  box-shadow:0 0 16px rgba(0,255,0,0.4);}
+.brand-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;letter-spacing:2px;
+  background:linear-gradient(135deg,#00ff00,#00cc66);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.brand-sub{font-size:0.6rem;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--glass2);
+  color:var(--accent);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all 0.25s;
+}
+.icon-btn:hover{border-color:var(--accent);box-shadow:0 0 12px rgba(0,255,0,0.3);transform:translateY(-1px)}
+.lang-pill{
+  display:flex;border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.lang-btn{
+  padding:6px 12px;border:none;background:transparent;
+  color:var(--text-muted);font-size:0.78rem;font-weight:600;
+  cursor:pointer;transition:all 0.2s;font-family:inherit;
+}
+.lang-btn.active{background:var(--accent);color:#000}
+.hero{
+  text-align:center;padding:40px 20px 30px;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,8vw,5rem);
+  letter-spacing:4px;
+  background:linear-gradient(135deg,#00ff00 0%,#00cc44 50%,#00aa22 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;line-height:1;margin-bottom:8px;
+}
+.hero-sub{color:var(--text-muted);font-size:0.9rem;letter-spacing:2px;text-transform:uppercase}
+.made-in{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;padding:4px 14px;
+  border:1px solid var(--border);border-radius:20px;
+  font-size:0.72rem;letter-spacing:2px;color:var(--accent);
+  background:var(--accent-dim);text-transform:uppercase;
+}
+.mode-tabs{
+  display:flex;gap:8px;padding:16px 0 0;overflow-x:auto;
+  scrollbar-width:none;
+}
+.mode-tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:9px 20px;border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--glass2);
+  color:var(--text-muted);
+  font-size:0.82rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  transition:all 0.25s;font-family:inherit;
+  display:flex;align-items:center;gap:6px;
+}
+.tab-btn.active{
+  background:linear-gradient(135deg,rgba(0,255,0,0.25),rgba(0,200,0,0.1));
+  border-color:var(--accent);color:var(--accent);
+  box-shadow:0 0 14px rgba(0,255,0,0.15);
+}
+.tab-btn:hover:not(.active){border-color:var(--border-hover);color:var(--text)}
+.controls{
+  display:flex;gap:10px;padding:16px 0;flex-wrap:wrap;align-items:center;
+}
+.search-wrap{
+  flex:1;min-width:220px;position:relative;
+}
+.search-wrap input{
+  width:100%;padding:11px 44px 11px 16px;
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--glass2);color:var(--text);
+  font-size:0.9rem;font-family:inherit;
+  transition:all 0.25s;outline:none;
+}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 16px rgba(0,255,0,0.2)}
+.search-wrap input::placeholder{color:var(--text-muted)}
+.search-icon{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);pointer-events:none;font-size:15px;
+}
+select.filter-sel{
+  padding:11px 16px;border:1px solid var(--border);border-radius:12px;
+  background:var(--glass2);color:var(--text);
+  font-size:0.85rem;font-family:inherit;outline:none;cursor:pointer;
+  transition:all 0.25s;min-width:150px;
+}
+select.filter-sel:focus{border-color:var(--accent)}
+select.filter-sel option{background:#0d1a10;color:#e8f5e9}
+.sec-label{
+  font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent);margin:8px 0 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.movies-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px;
+}
+@media(min-width:500px){.movies-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
+@media(min-width:900px){.movies-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+.movie-card{
+  position:relative;background:var(--card-bg);
+  border-radius:14px;overflow:hidden;cursor:pointer;
+  border:1px solid var(--border);
+  transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;
+}
+.movie-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 36px rgba(0,255,0,0.25);
+  border-color:var(--accent);
+}
+.movie-card:active{transform:scale(0.97)}
+.movie-poster{width:100%;height:var(--poster-h);object-fit:cover;display:block}
+.movie-info{padding:12px}
+.movie-title{
+  font-size:0.88rem;font-weight:700;color:var(--accent);
+  margin-bottom:6px;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.movie-meta{display:flex;gap:10px;font-size:0.75rem;color:var(--text-muted);flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:3px}
+.rating{color:#00ff00;font-weight:700}
+.movie-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,10,2,0.92);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.25s;
+}
+.movie-card:hover .movie-overlay{opacity:1}
+.overlay-btns{display:flex;flex-direction:column;gap:10px;width:80%;max-width:180px}
+.ov-btn{
+  padding:10px;border-radius:10px;border:1px solid var(--accent);
+  background:rgba(0,0,0,0.8);color:var(--accent);
+  font-size:0.82rem;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all 0.2s;text-align:center;
+}
+.ov-btn.primary{background:linear-gradient(135deg,#00ff00,#00aa00);color:#000;border:none}
+.ov-btn:hover{transform:scale(1.04);box-shadow:0 0 14px rgba(0,255,0,0.4)}
+@media(max-width:768px){
+  .movie-overlay{opacity:0;pointer-events:none}
+  .movie-card.tapped .movie-overlay{opacity:1;pointer-events:all}
+}
+.iptv-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:12px;
+}
+.iptv-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:14px;padding:16px 12px;text-align:center;
+  cursor:pointer;transition:all 0.25s;
+}
+.iptv-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,255,0,0.2)}
+.iptv-card:active{transform:scale(0.97)}
+.iptv-icon{font-size:2.2rem;margin-bottom:8px}
+.iptv-name{font-size:0.82rem;font-weight:700;color:var(--accent);margin-bottom:4px}
+.iptv-sub{font-size:0.7rem;color:var(--text-muted)}
+.loading-box,.empty-box{
+  text-align:center;padding:60px 20px;
+  color:var(--accent);grid-column:1/-1;
+}
+.loading-box .spinner{
+  width:40px;height:40px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin 0.8s linear infinite;margin:0 auto 16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.95);
+  display:none;align-items:center;justify-content:center;
+  padding:16px;animation:fadeIn 0.25s;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-inner{
+  position:relative;width:100%;max-width:1100px;
+  background:#050f07;border-radius:18px;overflow:hidden;
+  border:1px solid var(--accent);
+  box-shadow:0 0 60px rgba(0,255,0,0.3);
+  display:flex;flex-direction:column;
+  max-height:90vh;
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  background:rgba(0,20,5,0.9);gap:12px;flex-wrap:wrap;
+}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;
+  color:var(--accent);flex:1;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;
+}
+.modal-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.server-sel{
+  padding:7px 12px;border:1px solid var(--border);border-radius:8px;
+  background:rgba(0,0,0,0.7);color:var(--accent);
+  font-size:0.78rem;font-family:inherit;outline:none;cursor:pointer;
+}
+.server-sel option{background:#050f07}
+.close-modal{
+  width:34px;height:34px;border-radius:8px;
+  border:1px solid var(--border);background:rgba(0,0,0,0.6);
+  color:var(--accent);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;flex-shrink:0;
+}
+.close-modal:hover{background:rgba(255,0,0,0.2);border-color:#ff4444;color:#ff4444}
+.modal-frame{flex:1;min-height:260px;height:56vw;max-height:62vh}
+.modal-frame iframe{width:100%;height:100%;border:none;display:block}
+
+.iptv-player-wrap{width:100%;height:100%;position:relative;background:#000}
+.iptv-player-wrap video{width:100%;height:100%;background:#000;outline:none}
+.iptv-player-status{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  color:var(--accent);font-size:0.95rem;text-align:center;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.iptv-player-status .spinner-mini{
+  width:32px;height:32px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+.iptv-player-status.error{color:#ff4444}
+.iptv-player-status.success{color:var(--accent)}
+
+.trailer-inner{max-width:900px}
+.trailer-inner .modal-frame{height:50vw;max-height:55vh}
+
+footer{
+  text-align:center;padding:24px;
+  color:var(--text-muted);font-size:0.75rem;letter-spacing:2px;
+  border-top:1px solid var(--border);margin-top:40px;
+  text-transform:uppercase;
+}
+footer span{color:var(--accent)}
+
+[dir="rtl"]{text-align:right}
+[dir="rtl"] .brand{flex-direction:row-reverse}
+[dir="rtl"] .search-icon{right:auto;left:14px}
+[dir="rtl"] .search-wrap input{padding:11px 16px 11px 44px}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,255,0,0.3);border-radius:4px}
+
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--accent);color:#000;
+  padding:10px 24px;border-radius:30px;
+  font-size:0.85rem;font-weight:700;
+  z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+#iptv-add-panel{margin:12px 0}
+#iptv-add-panel details{
+  background:var(--glass2);border:1px solid var(--border);
+  border-radius:12px;padding:12px 16px;
+}
+#iptv-add-panel summary{
+  cursor:pointer;color:var(--accent);
+  font-weight:600;font-size:0.85rem;
+}
+.iptv-add-form{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.iptv-add-form input,.iptv-add-form select{
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;
+  background:var(--bg);color:var(--text);
+  font-size:0.82rem;font-family:inherit;outline:none;flex:1;min-width:120px;
+}
+.iptv-add-form input:focus{border-color:var(--accent)}
+.iptv-add-form button{
+  padding:8px 18px;border:none;border-radius:8px;
+  background:var(--accent);color:#000;
+  font-weight:700;cursor:pointer;font-family:inherit;
+}
+</style>
+</head>
+<body data-theme="dark">
+<canvas id="particles-canvas"></canvas>
+
+<header>
+  <a class="brand" href="#">
+    <img class="logo-img" src="https://ik.imagekit.io/imgayoub/LOGO/ayoubpw.png" alt="Logo" onerror="this.style.display='none'">
+    <div class="brand-text">
+      <div class="brand-name">AYOUB CINEMA</div>
+      <div class="brand-sub">Movie Library</div>
+    </div>
+  </a>
+  <div class="header-actions">
+    <div class="lang-pill">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ar">ع</button>
+    </div>
+    <button class="icon-btn" id="themeToggle" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-title">AYOUB CINEMA</div>
+    <div class="hero-sub" id="heroSub">Your Ultimate Movie Library</div>
+    <div class="made-in">&#127916; Made in Vienna &#127466;&#127481;</div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="tab-btn active" data-tab="movies">&#127916; <span data-i="movies">Movies</span></button>
+    <button class="tab-btn" data-tab="iptv">&#128250; <span data-i="iptv">IPTV</span></button>
+  </div>
+
+  <div id="tab-movies">
+    <div class="controls">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Search movies..." autocomplete="off">
+        <span class="search-icon">&#128269;</span>
+      </div>
+      <select class="filter-sel" id="genreFilter">
+        <option value="">All Genres</option>
+        <option value="28">Action</option>
+        <option value="12">Adventure</option>
+        <option value="16">Animation</option>
+        <option value="35">Comedy</option>
+        <option value="80">Crime</option>
+        <option value="18">Drama</option>
+        <option value="14">Fantasy</option>
+        <option value="27">Horror</option>
+        <option value="10749">Romance</option>
+        <option value="878">Sci-Fi</option>
+        <option value="53">Thriller</option>
+      </select>
+    </div>
+    <div class="sec-label" id="secLabel">Popular Movies</div>
+    <div class="movies-grid" id="moviesContainer">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <div>Loading movies...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-iptv" style="display:none">
+    <div class="sec-label" style="margin-top:16px">Live TV Channels</div>
+    <div id="iptv-add-panel">
+      <details>
+        <summary>&#10133; Add Custom Channel</summary>
+        <div class="iptv-add-form">
+          <input type="text" id="ch-name" placeholder="Channel name">
+          <input type="text" id="ch-url" placeholder="Stream URL or YouTube URL">
+          <select id="ch-type">
+            <option value="hls">HLS Stream</option>
+            <option value="yt">YouTube</option>
+            <option value="embed">Embed URL</option>
+          </select>
+          <input type="text" id="ch-icon" placeholder="Emoji icon (e.g. &#128250;)" style="max-width:80px">
+          <button onclick="addCustomChannel()">+ Add</button>
+        </div>
+      </details>
+    </div>
+    <div class="iptv-grid" id="iptvGrid"></div>
+  </div>
+</div>
+
+<footer>
+  <div>AYOUB CINEMA &nbsp;·&nbsp; <span>Made in Vienna &#127466;&#127481;</span> &nbsp;·&nbsp; ayoub.pw</div>
+  <div style="margin-top:6px;font-size:0.65rem;opacity:0.5">All streams are publicly available. For entertainment purposes only.</div>
+</footer>
+
+<div class="modal" id="playerModal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-title" id="playerTitle">Now Playing</div>
+      <div class="modal-actions">
+        <select class="server-sel" id="serverSel">
+          <option value="vidsrc">VidSrc &#11088;</option>
+          <option value="vidsrc2">VidSrc 2</option>
+          <option value="2embed">2Embed</option>
+          <option value="embedsu">Embed.su</option>
+          <option value="superembed">SuperEmbed</option>
+          <option value="smashystream">Smashy</option>
+        </select>
+        <button class="icon-btn" onclick="toggleFullscreen()" title="Fullscreen">&#9928;&#65039;</button>
+        <button class="close-modal" onclick="closeModal('playerModal')">&#10005;</button>
+      </div>
+    </div>
+    <div class="modal-frame" id="playerFrame"></div>
+  </div>
+</div>
+
+<div class="modal" id="trailerModal">
+  <div class="modal-inner trailer-inner">
+    <div class="modal-header">
+      <div class="modal-title" id="trailerTitle">Trailer</div>
+      <button class="close-modal" onclick="closeModal('trailerModal')">&#10005;</button>
+    </div>
+    <div class="modal-frame" id="trailerFrame"></div>
+  </div>
+</div>
+
+<div class="modal" id="iptvModal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div class="modal-title" id="iptvTitle">Live TV</div>
+      <button class="close-modal" onclick="closeModal('iptvModal')">&#10005;</button>
+    </div>
+    <div class="modal-frame" id="iptvFrame"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+// ===== CONFIG =====
+var BASE_API = '/api';
+
+// ===== STATE =====
+var currentLang = 'en';
+var currentMovie = null;
+var allMovies = [];
+var searchTimer = null;
+var _iptvChannels = [];
+var hlsInstances = [];
+
+// ===== TRANSLATIONS =====
+var T = {
+  en: {
+    movies: 'Movies', iptv: 'IPTV', popular: 'Popular Movies',
+    search: 'Search movies...', allGenres: 'All Genres',
+    watch: '\u25b6 Watch Now', trailer: '\uD83C\uDFAC Trailer',
+    loading: 'Loading...', noResults: 'No movies found',
+    heroSub: 'Your Ultimate Movie Library',
+    liveTV: 'Live TV Channels',
+    loadingStream: 'Loading stream...',
+    streamError: 'Stream error. Try again later.',
+    notSupported: 'HLS not supported on this browser.',
+    addChannel: 'Add Custom Channel',
+    channelName: 'Channel name',
+    streamUrl: 'Stream URL or YouTube URL',
+    copied: 'Copied!'
+  },
+  ar: {
+    movies: '\u0623\u0641\u0644\u0627\u0645', iptv: 'IPTV', popular: '\u0623\u0641\u0644\u0627\u0645 \u0634\u0627\u0626\u0639\u0629',
+    search: '\u0627\u0628\u062d\u062b \u0639\u0646 \u0641\u064a\u0644\u0645...', allGenres: '\u0643\u0644 \u0627\u0644\u0623\u0646\u0648\u0627\u0639',
+    watch: '\u25b6 \u0634\u0627\u0647\u062f \u0627\u0644\u0622\u0646', trailer: '\uD83C\uDFAC \u0625\u0639\u0644\u0627\u0646',
+    loading: '\u062c\u0627\u0631\u064a \u0627\u0644\u062a\u062d\u0645\u064a\u0644...', noResults: '\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c',
+    heroSub: '\u0645\u0643\u062a\u0628\u0629 \u0627\u0644\u0623\u0641\u0644\u0627\u0645 \u0627\u0644\u062e\u0627\u0635\u0629 \u0628\u0643',
+    liveTV: '\u0642\u0646\u0648\u0627\u062a \u062a\u0644\u0641\u0632\u064a\u0648\u0646\u064a\u0629 \u0645\u0628\u0627\u0634\u0631\u0629',
+    loadingStream: '\u062c\u0627\u0631\u064a \u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0628\u062b...',
+    streamError: '\u062e\u0637\u0623 \u0641\u064a \u0627\u0644\u0628\u062b. \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649.',
+    notSupported: 'HLS \u063a\u064a\u0631 \u0645\u062f\u0639\u0648\u0645 \u0641\u064a \u0647\u0630\u0627 \u0627\u0644\u0645\u062a\u0635\u0641\u062d.',
+    addChannel: '\u0625\u0636\u0627\u0641\u0629 \u0642\u0646\u0627\u0629',
+    channelName: '\u0627\u0633\u0645 \u0627\u0644\u0642\u0646\u0627\u0629',
+    streamUrl: '\u0631\u0627\u0628\u0637 \u0627\u0644\u0628\u062b \u0623\u0648 \u064a\u0648\u062a\u064a\u0648\u0628',
+    copied: '\u062a\u0645 \u0627\u0644\u0646\u0633\u062e!'
+  }
+};
+function t(k) { return T[currentLang][k] || k; }
+
+// ===== IPTV CHANNELS =====
+var IPTV_CHANNELS = [
+  { name: 'NASA TV', nameAr: '\u0646\u0627\u0633\u0627', icon: '\ud83d\ude80', sub: 'Science', type: 'hls', url: 'https://nasa-i.akamaihd.net/hls/live/253565/NASA-NTV1-HLS/master.m3u8' },
+  { name: 'NASA UHD', nameAr: '\u0646\u0627\u0633\u0627 \u062f\u0642\u0629 \u0639\u0627\u0644\u064a\u0629', icon: '\ud83d\ude80', sub: 'Space', type: 'hls', url: 'https://nasa-i.akamaihd.net/hls/live/253565/NASA-NTV1-HLS/master_uhd.m3u8' },
+  { name: 'Lofi Girl', nameAr: '\u0644\u0648\u0641\u064a', icon: '\ud83c\udfb5', sub: 'Music / Study', type: 'yt', url: 'https://www.youtube.com/watch?v=jfKfPfyJRdk' },
+  { name: 'Chillhop', nameAr: '\u0645\u0648\u0633\u064a\u0642\u0649 \u0647\u0627\u062f\u0626\u0629', icon: '\ud83c\udfb6', sub: 'Music', type: 'yt', url: 'https://www.youtube.com/watch?v=7NOSDKb0HlU' },
+  { name: 'Al Jazeera EN', nameAr: '\u0627\u0644\u062c\u0632\u064a\u0631\u0629 \u0625\u0646\u062c\u0644\u064a\u0632\u064a', icon: '\ud83c\udf0d', sub: 'News', type: 'yt', url: 'https://www.youtube.com/watch?v=QkD-e1MCDaA' },
+  { name: 'Al Jazeera AR', nameAr: '\u0627\u0644\u062c\u0632\u064a\u0631\u0629 \u0639\u0631\u0628\u064a', icon: '\ud83d\udcfa', sub: '\u0623\u062e\u0628\u0627\u0631', type: 'yt', url: 'https://www.youtube.com/watch?v=TQnSLetOVk4' },
+  { name: 'France 24 EN', nameAr: '\u0641\u0631\u0627\u0646\u0633 24', icon: '\ud83c\uddeb\ud83c\uddf7', sub: 'News', type: 'yt', url: 'https://www.youtube.com/watch?v=8ET9i2AsqVc' },
+  { name: 'Sky News', nameAr: '\u0633\u0643\u0627\u064a \u0646\u064a\u0648\u0632', icon: '\ud83c\udf0d', sub: 'News', type: 'yt', url: 'https://www.youtube.com/watch?v=9Auq9mYxFEE' },
+  { name: 'DW News', nameAr: '\u062f\u0648\u064a\u062a\u0634\u0647 \u0641\u064a\u0644\u0647', icon: '\ud83c\udde9\ud83c\uddea', sub: 'News', type: 'yt', url: 'https://www.youtube.com/watch?v=GE_S9wvDrx4' },
+  { name: 'CGTN News', nameAr: '\u0633\u064a \u062c\u064a \u062a\u064a \u0625\u0646', icon: '\ud83c\uddf7\ud83c\uddfa', sub: 'News', type: 'yt', url: 'https://www.youtube.com/watch?v=Rq5sL0MNWXw' },
+  { name: 'ARTE Documentary', nameAr: '\u0623\u0631\u062a\u064a \u0648\u062b\u0627\u0626\u0642\u064a', icon: '\ud83c\udfac', sub: 'Documentary', type: 'yt', url: 'https://www.youtube.com/watch?v=8e0lSaMfjvo' },
+  { name: 'NASA Media', nameAr: '\u0623\u0641\u0636\u0644 \u0644\u062d\u0638\u0627\u062a \u0646\u0627\u0633\u0627', icon: '\ud83c\udf1f', sub: 'Space Compilation', type: 'yt', url: 'https://www.youtube.com/watch?v=21X5lGlDOfg' },
+];
+
+// ===== PARTICLES =====
+(function(){
+  var canvas = document.getElementById('particles-canvas');
+  var ctx = canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+  resize();
+  window.addEventListener('resize',resize);
+  var pts=[];
+  for(var i=0;i<70;i++){
+    pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+      vx:(Math.random()-0.5)*0.8,vy:(Math.random()-0.5)*0.8,r:Math.random()*1.5+0.5});
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>canvas.width)p.vx*=-1;
+      if(p.y<0||p.y>canvas.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,255,0,0.45)';ctx.fill();
+    }
+    for(var i=0;i<pts.length;i++){
+      for(var j=i+1;j<pts.length;j++){
+        var dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          ctx.beginPath();
+          ctx.strokeStyle='rgba(0,255,0,' + (0.35*(1-d/140)) + ')';
+          ctx.lineWidth=0.4;
+          ctx.moveTo(pts[i].x,pts[i].y);
+          ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== THEME =====
+var themeBtn = document.getElementById('themeToggle');
+function applyTheme(t){
+  document.body.setAttribute('data-theme',t);
+  themeBtn.textContent = t==='dark'?'\uD83C\uDF19':'\u2600\uFE0F';
+  try{localStorage.setItem('ayoub-cinema-theme',t)}catch(e){}
+}
+try{applyTheme(localStorage.getItem('ayoub-cinema-theme')||'dark')}catch(e){applyTheme('dark')}
+themeBtn.addEventListener('click',function(){
+  var c=document.body.getAttribute('data-theme');
+  applyTheme(c==='dark'?'light':'dark');
+});
+
+// ===== LANGUAGE =====
+document.querySelectorAll('.lang-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    currentLang=btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b===btn)});
+    document.documentElement.lang=currentLang;
+    document.documentElement.dir=currentLang==='ar'?'rtl':'ltr';
+    updateI18n();
+    displayMovies(allMovies);
+    renderIPTV();
+  });
+});
+function updateI18n(){
+  document.getElementById('heroSub').textContent=t('heroSub');
+  document.getElementById('searchInput').placeholder=t('search');
+  document.getElementById('secLabel').textContent=t('popular');
+  document.querySelectorAll('[data-i]').forEach(function(el){
+    el.textContent=t(el.dataset.i)||el.textContent;
+  });
+}
+
+// ===== TABS =====
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b===btn)});
+    document.getElementById('tab-movies').style.display=btn.dataset.tab==='movies'?'':'none';
+    document.getElementById('tab-iptv').style.display=btn.dataset.tab==='iptv'?'':'none';
+    if(btn.dataset.tab==='iptv') renderIPTV();
+  });
+});
+
+// ===== IPTV =====
+function renderIPTV(){
+  var grid=document.getElementById('iptvGrid');
+  var channels = getChannels();
+  _iptvChannels = channels;
+  grid.innerHTML=channels.map(function(ch,i){
+    return '<div class="iptv-card" onclick="openIPTV(' + i + ')">' +
+      '<div class="iptv-icon">' + ch.icon + '</div>' +
+      '<div class="iptv-name">' + (currentLang==='ar'?ch.nameAr:ch.name) + '</div>' +
+      '<div class="iptv-sub">' + ch.sub + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+function getChannels(){
+  var custom = [];
+  try{
+    var saved = localStorage.getItem('ayoub-custom-channels');
+    if(saved) custom = JSON.parse(saved);
+  }catch(e){}
+  return IPTV_CHANNELS.concat(custom);
+}
+
+function addCustomChannel(){
+  var name = document.getElementById('ch-name').value.trim();
+  var url = document.getElementById('ch-url').value.trim();
+  var type = document.getElementById('ch-type').value;
+  var icon = document.getElementById('ch-icon').value.trim() || '\uD83D\uDCFA';
+  if(!name||!url){showToast('Please fill name and URL');return}
+  var ch = {name:name, nameAr:name, icon:icon, sub:'Custom', type:type, url:url};
+  var custom = [];
+  try{var saved=localStorage.getItem('ayoub-custom-channels');if(saved)custom=JSON.parse(saved)}catch(e){}
+  custom.push(ch);
+  localStorage.setItem('ayoub-custom-channels',JSON.stringify(custom));
+  document.getElementById('ch-name').value='';
+  document.getElementById('ch-url').value='';
+  showToast('\u2705 ' + name + ' added!');
+  renderIPTV();
+}
+
+function openIPTV(idx){
+  var ch = _iptvChannels[idx];
+  if(!ch) return;
+  destroyHlsPlayers();
+  var name = currentLang==='ar'?ch.nameAr:ch.name;
+  document.getElementById('iptvTitle').textContent = '\uD83D\uDCF0 ' + name;
+  var frame = document.getElementById('iptvFrame');
+
+  if(ch.type === 'yt'){
+    var videoId = extractYoutubeId(ch.url);
+    if(videoId){
+      frame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
+    } else {
+      window.open(ch.url, '_blank');
+      showToast('Opening in new tab...');
+      return;
+    }
+  } else if(ch.type === 'hls'){
+    frame.innerHTML = '<div class="iptv-player-wrap">' +
+      '<video id="hlsVideo" controls autoplay playsinline></video>' +
+      '<div class="iptv-player-status" id="hlsStatus"><div class="spinner-mini"></div><span>' + t('loadingStream') + '</span></div>' +
+      '</div>';
+    initHlsPlayer(ch.url);
+  } else {
+    window.open(ch.url, '_blank');
+    showToast('Opening in new tab...');
+    return;
+  }
+
+  document.getElementById('iptvModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function extractYoutubeId(url){
+  var match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function initHlsPlayer(url){
+  var video = document.getElementById('hlsVideo');
+  var status = document.getElementById('hlsStatus');
+  if(!video||!status) return;
+  if(Hls.isSupported()){
+    var hls = new Hls();
+    hlsInstances.push(hls);
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function(){
+      status.innerHTML = '<span style="color:#00ff00">\u25b6 Live</span>';
+      setTimeout(function(){status.style.display='none'},3000);
+      video.play();
+    });
+    hls.on(Hls.Events.ERROR, function(e,d){
+      if(d.fatal){
+        status.className = 'iptv-player-status error';
+        status.innerHTML = '\u274c ' + t('streamError');
+      }
+    });
+  } else if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src = url;
+    video.addEventListener('loadedmetadata', function(){
+      status.innerHTML = '<span style="color:#00ff00">\u25b6 Live</span>';
+      setTimeout(function(){status.style.display='none'},3000);
+      video.play();
+    });
+  } else {
+    status.className = 'iptv-player-status error';
+    status.innerHTML = '\u274c ' + t('notSupported');
+  }
+}
+
+function destroyHlsPlayers(){
+  for(var i=0;i<hlsInstances.length;i++){
+    try{hlsInstances[i].destroy()}catch(e){}
+  }
+  hlsInstances = [];
+}
+
+// ===== MOVIES =====
+async function fetchMovies(){
+  try{
+    var res = await fetch(BASE_API + '/tmdb?path=/movie/popular&lang=' + currentLang);
+    var data = await res.json();
+    allMovies = data.results.filter(function(m){return m.poster_path});
+    displayMovies(allMovies);
+  }catch(e){
+    document.getElementById('moviesContainer').innerHTML =
+      '<div class="empty-box">\u274c Failed to load movies. Check your connection.</div>';
+  }
+}
+
+function displayMovies(movies){
+  var c=document.getElementById('moviesContainer');
+  if(!movies.length){c.innerHTML='<div class="empty-box">\uD83C\uDFAC ' + t('noResults') + '</div>';return}
+  c.innerHTML=movies.map(function(m){
+    var title = m.title||m.name||'Unknown';
+    var poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450/050f07/00ff00?text=No+Poster';
+    var year = m.release_date ? m.release_date.slice(0,4) : '';
+    var rating = m.vote_average ? m.vote_average.toFixed(1) : 'N/A';
+    return '<div class="movie-card" onclick="cardTap(this,event,' + m.id + ',\'' + title.replace(/'/g,"\\'") + '\')">' +
+      '<img class="movie-poster" src="' + poster + '" alt="' + title + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/050f07/00ff00?text=No+Poster\'">' +
+      '<div class="movie-info"><div class="movie-title">' + title + '</div>' +
+      '<div class="movie-meta"><span class="meta-item rating">\u2B50 ' + rating + '</span>' +
+      '<span class="meta-item">' + year + '</span></div></div>' +
+      '<div class="movie-overlay"><div class="overlay-btns">' +
+      '<button class="ov-btn primary" onclick="watchMovie(' + m.id + ',\'' + title.replace(/'/g,"\\'") + '\',event)">' + t('watch') + '</button>' +
+      '<button class="ov-btn" onclick="watchTrailer(' + m.id + ',\'' + title.replace(/'/g,"\\'") + '\',event)">' + t('trailer') + '</button>' +
+      '</div></div></div>';
+  }).join('');
+}
+
+function cardTap(card,e,id,title){
+  if(window.innerWidth>768) return;
+  if(!card.classList.contains('tapped')){
+    e.preventDefault();
+    document.querySelectorAll('.movie-card.tapped').forEach(function(c){c.classList.remove('tapped')});
+    card.classList.add('tapped');
+  }
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.movie-card'))
+    document.querySelectorAll('.movie-card.tapped').forEach(function(c){c.classList.remove('tapped')});
+});
+
+// ===== WATCH / TRAILER =====
+async function watchMovie(id,title,e){
+  if(e){e.stopPropagation()}
+  currentMovie={id:id,title:title};
+  document.getElementById('playerTitle').textContent=title;
+  var url = getStreamUrl(id);
+  document.getElementById('playerFrame').innerHTML='<iframe src="' + url + '" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>';
+  document.getElementById('playerModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+async function watchTrailer(id,title,e){
+  if(e){e.stopPropagation()}
+  showToast('Loading trailer...');
+  try{
+    var res = await fetch(BASE_API + '/tmdb?path=/movie/' + id + '/videos&lang=en');
+    var data = await res.json();
+    var trailer = data.results.find(function(v){return v.type==='Trailer'&&v.site==='YouTube'}) || data.results[0];
+    if(trailer){
+      document.getElementById('trailerTitle').textContent=title + ' \u2014 Trailer';
+      document.getElementById('trailerFrame').innerHTML=
+        '<iframe src="https://www.youtube.com/embed/' + trailer.key + '?autoplay=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>';
+      document.getElementById('trailerModal').style.display='flex';
+      document.body.style.overflow='hidden';
+    } else {
+      showToast(currentLang==='ar'?'\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u063A\u064A\u0631 \u0645\u062A\u0648\u0641\u0631':'Trailer not available');
+    }
+  }catch(err){showToast('Error loading trailer')}
+}
+
+function getStreamUrl(movieId){
+  var srv = document.getElementById('serverSel').value;
+  switch(srv){
+    case 'vidsrc':     return 'https://vidsrc.xyz/embed/movie?tmdb=' + movieId;
+    case 'vidsrc2':    return 'https://vidsrc.net/embed/movie/' + movieId;
+    case 'superembed': return 'https://multiembed.mov/directstream.php?video_id=' + movieId + '&tmdb=1';
+    case 'embedsu':    return 'https://embed.su/embed/movie/' + movieId;
+    case '2embed':     return 'https://www.2embed.cc/embed/' + movieId;
+    case 'smashystream': return 'https://player.smashy.stream/movie/' + movieId;
+    default:           return 'https://vidsrc.xyz/embed/movie?tmdb=' + movieId;
+  }
+}
+
+function changeServer(){
+  if(!currentMovie)return;
+  var url = getStreamUrl(currentMovie.id);
+  document.getElementById('playerFrame').innerHTML='<iframe src="' + url + '" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>';
+}
+document.getElementById('serverSel').addEventListener('change',changeServer);
+
+// ===== FULLSCREEN =====
+function toggleFullscreen(){
+  var frame=document.getElementById('playerFrame');
+  var iframe=frame.querySelector('iframe');
+  if(iframe){
+    if(iframe.requestFullscreen) iframe.requestFullscreen();
+    else if(iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+  }
+}
+
+// ===== CLOSE MODAL =====
+function closeModal(id){
+  var modal=document.getElementById(id);
+  modal.style.display='none';
+  document.body.style.overflow='';
+  modal.querySelectorAll('iframe').forEach(function(f){
+    var src = f.src;
+    f.src = '';
+    f.src = src;
+  });
+  if(id==='iptvModal'){
+    var frame=document.getElementById('iptvFrame');
+    frame.innerHTML='';
+    destroyHlsPlayers();
+  } else if(id==='playerModal'){
+    document.getElementById('playerFrame').innerHTML='';
+  } else if(id==='trailerModal'){
+    document.getElementById('trailerFrame').innerHTML='';
+  }
+}
+document.querySelectorAll('.modal').forEach(function(m){
+  m.addEventListener('click',function(e){if(e.target===m)closeModal(m.id)});
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){
+  ['playerModal','trailerModal','iptvModal'].forEach(function(id){
+    if(document.getElementById(id).style.display!=='none')closeModal(id);
+  });
+}});
+
+// ===== SEARCH =====
+document.getElementById('searchInput').addEventListener('input',function(e){
+  clearTimeout(searchTimer);
+  var q=e.target.value.trim();
+  if(!q){displayMovies(allMovies);document.getElementById('secLabel').textContent=t('popular');return}
+  document.getElementById('secLabel').textContent='Search Results';
+  document.getElementById('moviesContainer').innerHTML='<div class="loading-box"><div class="spinner"></div><div>Searching...</div></div>';
+  searchTimer=setTimeout(async function(){
+    try{
+      var res=await fetch(BASE_API + '/tmdb?path=/search/movie&query=' + encodeURIComponent(q) + '&lang=' + currentLang);
+      var data=await res.json();
+      displayMovies(data.results.filter(function(m){return m.poster_path}));
+    }catch(err){displayMovies(allMovies)}
+  },500);
+});
+
+// ===== GENRE FILTER =====
+document.getElementById('genreFilter').addEventListener('change',function(e){
+  var gid=e.target.value;
+  if(!gid){displayMovies(allMovies);return}
+  displayMovies(allMovies.filter(function(m){return m.genre_ids&&m.genre_ids.indexOf(parseInt(gid))!==-1}));
+});
+
+// ===== TOAST =====
+var toastTimer;
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.classList.remove('show')},2500);
+}
+
+// ===== TELEGRAM NOTIFICATION =====
+(function(){
+  try{
+    if(sessionStorage.getItem('ayoub-notified')) return;
+    var info = {
+      url: window.location.href,
+      referrer: document.referrer || 'direct',
+      lang: navigator.language,
+      ua: navigator.userAgent.slice(0,100),
+      screen: screen.width + 'x' + screen.height,
+      timestamp: new Date().toISOString()
+    };
+    fetch(BASE_API + '/notify', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(info)
+    }).catch(function(){});
+    try{sessionStorage.setItem('ayoub-notified','1')}catch(e){}
+  }catch(e){}
+})();
+
+// ===== INIT =====
+fetchMovies();
+renderIPTV();
+</script>
+</body>
+</html>
