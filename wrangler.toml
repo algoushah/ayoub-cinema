@@ -1,0 +1,7 @@
+name = "ayoub-cinema"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "."
+
+# Environment variables are set via:
+#   wrangler pages secret put <KEY>
+# or in the Cloudflare Pages dashboard
